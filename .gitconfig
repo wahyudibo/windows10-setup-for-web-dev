@@ -1,0 +1,11 @@
+[user]
+	name = your-username
+	email = your-email
+	signingkey = your-gpg-signingkey
+[commit]
+	gpgsign = true
+[core]
+	autocrlf = true
+	filemode = false
+[credential]
+	helper = /mnt/c/Program\\ Files/Git/mingw64/libexec/git-core/git-credential-wincred.exe
