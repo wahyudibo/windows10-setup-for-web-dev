@@ -27,6 +27,7 @@ SideNote:
   - [Sharing Git Credentials Between Windows and WSL](#sharing-git-credentials-between-windows-and-wsl)
   - [Install and Configured Docker for Windows](#install-and-configured-docker-for-windows)
   - [Install and Configure VSCode + Remote Development Pack](#install-and-configure-vscode--remote-development-pack)
+  - [Restart WSL from Task Manager](#restart-wsl-from-task-manager)
 - Known Bugs
   - [WSL 2 Consumes Too Much CPU / Memory](#wsl-2-consumes-too-much-cpu--memory)
 
@@ -221,6 +222,10 @@ Git can be a pain for a cross platform project. This is due to difference in how
 
 - See [here](https://code.visualstudio.com/docs/remote/wsl) for more complete instruction on setting VSCode and WSL  
 
+### Restart WSL from Task Manager
+
+Sometimes, the connection to the WSL is lost / freeze. We can restart it by go to Task Manager > Services > LxssManager then right click and choose Restart.
+
 ## Known Bugs
 
 ### WSL 2 Consumes Too Much CPU / Memory
@@ -251,5 +256,4 @@ Open the Task Manager and see if `Vmmem` is causing your CPU / memory usage to 1
   $ crontab -l
   * * * * * root /home/[linux-username]/.drop_cache.sh
   ```
-
   
