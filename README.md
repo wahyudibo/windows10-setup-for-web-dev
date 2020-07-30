@@ -28,6 +28,7 @@ SideNote:
   - [Install and Configured Docker for Windows](#install-and-configured-docker-for-windows)
   - [Install and Configure VSCode + Remote Development Pack](#install-and-configure-vscode--remote-development-pack)
   - [Restart WSL from Task Manager](#restart-wsl-from-task-manager)
+  - [Install OpenSSH Server and Client](#install-openssh-server-and-client)
 - Known Bugs
   - [WSL 2 Consumes Too Much CPU / Memory](#wsl-2-consumes-too-much-cpu--memory)
 
@@ -226,34 +227,31 @@ Git can be a pain for a cross platform project. This is due to difference in how
 
 Sometimes, the connection to the WSL is lost / freeze. We can restart it by go to Task Manager > Services > LxssManager then right click and choose Restart.
 
+### Install OpenSSH Server and Client
+
+To make ssh command accessible from Powershell, we can install OpenSSH via Settings > Apps > Apps & features > Optional features > Add a feature > type "OpenSSH"
+
 ## Known Bugs
 
 ### WSL 2 Consumes Too Much CPU / Memory
 
-Open the Task Manager and see if `Vmmem` is causing your CPU / memory usage to 100%. Don't worry, that's not because your machine is lack of memory. In the following github issue page, someone reported that his machine (which having 64GB RAM) also encountered this problem too. Basically, it's a known bug when we use WSL 2 and try to do heavy operation. Apply the workaround from [here](https://github.com/microsoft/WSL/issues/4166#issuecomment-628493643) or you can follow my steps to implement those workaround in cron job which are :
+Open the Task Manager and see if `Vmmem` is causing your CPU / memory usage to 100%. Don't worry, that's not because your machine is lack of memory. In the following [github issue](https://github.com/microsoft/WSL/issues/4166), someone reported that his machine (which having 64GB RAM) also encountered this problem too. Basically, it's a known bug when we use WSL 2. This is the workaround:
 
-- open WSL console
-
-- create .drop_cache.sh file in home directory and give execute access with `chmod ug+x .drop_cache.sh`
-
-- inside the file, paste this command
-
-  ```bash
-  #!/usr/bin/env /bin/bash
-  
-  sudo sh -c "echo 3 >'/proc/sys/vm/drop_caches' && swapoff -a && swapon -a && printf '\n%s\n' 'Ram-cache and Swap Cleared'"
-  ```
-
-- Create a cron job that will run the script for every minute.
+- Create a file under C:\Users\your-username called .wslconfig and put this inside the file. Basically it is for limiting how much memory that wsl2 consumes. We can change the configuration as we see fit.
 
   ```
-  crontab -l | { cat; echo "* * * * * root /home/[linux-username]/.drop_cache.sh"; } | crontab -
+  [wsl2]
+  memory=4GB
+  swap=16GB
+  localhostForwarding=true
   ```
 
-- Check whether the cron is created or not by running `crontab -l` command
+Another workaround is to empty the cache in linux so it will free the memory and return it to windows
+
+- create an alias called drop_cache
 
   ```
-  $ crontab -l
-  * * * * * root /home/[linux-username]/.drop_cache.sh
+  alias drop_cache="sudo sh -c \"/usr/bin/echo 3 > /proc/sys/vm/drop_caches\" && printf '%s\n' 'Ram-cache Cleared'"
   ```
-  
+
+  and run this everytime the `Vmmem` start eating up your RAM.
